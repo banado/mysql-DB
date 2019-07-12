@@ -1,0 +1,28 @@
+keywords={'VN':['nanocell tivi + nano cell tivi + nanocell tv + nano cell tv','qled tivi + qled tv',],
+         'RU':['nanocell tv + nano cell tv + nanocell Телевизор + nano cell Телевизор','qled Телевизор + qled tv'],
+         'NN':['nanocell tv + nano cell tv','qled tv']}
+
+countrylist=['global','US','VN']
+time_7='now 7-d'
+accumulated_time='2019-01-01 2019-06-30'
+
+x=search_7(keywords,time_7,countrylist)
+y=search_accu(keywords,accumulated_time,countrylist)
+
+import pymysql
+import pandas as pd
+from pytrends.request import TrendReq
+from sqlalchemy import create_engine
+
+conn = pymysql.connect(host='localhost', user='root', password='',
+                       db='test_1', charset='utf8')
+curs = conn.cursor()
+engine = create_engine('mysql+mysqldb://root:@localhost/test_1?charset=utf8', convert_unicode=False)
+conn = engine.connect()
+
+# x.to_sql(name='past_7days',if_exists='replace',index=False,con=engine)
+
+y.to_sql(name="19년 누적 점유율",if_exists='replace',index=False,con=engine)
+y.to_sql(name=accumulated_time,if_exists='replace',index=False,con=engine)
+
+
