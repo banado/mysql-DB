@@ -1,0 +1,69 @@
+from pytrends.request import TrendReq
+import pandas as pd
+import os
+from datetime import datetime as dt
+
+def search_7(keywords,time,countrylist):
+
+    pytrends = TrendReq(hl = 'en-US', tz=360)
+    
+    if 'global' in countrylist:
+        countrylist[countrylist.index('global')]=''
+    
+    dictFrame=dict()
+    search_list=[]
+    for country in countrylist:
+        if country=='RU':
+            pytrends.build_payload(keywords['RU'], cat=0, timeframe= time, geo= country, gprop ='')
+        elif country=='VN':
+            pytrends.build_payload(keywords['VN'], cat=0, timeframe= time, geo= country, gprop ='')
+        else:
+            pytrends.build_payload(keywords['NN'], cat=0, timeframe= time, geo= country, gprop ='')
+
+        df=pytrends.interest_over_time()
+        df=df.drop(columns='isPartial')
+        if country=='':
+            df['Country']='Global'
+        else:
+            df['Country']=country
+        df.index = df.index.strftime('%m/%d/%Y')
+        df=df.rename(columns={df.columns[0]:'Nanocell',df.columns[1]:'Qled'})
+        df.reset_index(level=0, inplace=True)
+        df=df.rename(columns={'index':'Date'})
+
+        search_list.append(df)
+    final_table=pd.concat(search_list)
+    return final_table
+
+
+def search_accu(keywords,time,countrylist):
+
+    pytrends = TrendReq(hl = 'en-US', tz=360)
+    
+    if 'global' in countrylist:
+        countrylist[countrylist.index('global')]=''
+    
+    dictFrame=dict()
+    search_list=[]
+    for country in countrylist:
+        if country=='RU':
+            pytrends.build_payload(keywords['RU'], cat=0, timeframe= time, geo= country, gprop ='')
+        elif country=='VN':
+            pytrends.build_payload(keywords['VN'], cat=0, timeframe= time, geo= country, gprop ='')
+        else:
+            pytrends.build_payload(keywords['NN'], cat=0, timeframe= time, geo= country, gprop ='')
+
+        df=pytrends.interest_over_time()
+        df=df.drop(columns='isPartial')
+        if country=='':
+            df['Country']='Global'
+        else:
+            df['Country']=country
+        df.index = df.index.strftime('%m/%d/%Y')
+        df=df.rename(columns={df.columns[0]:'Nanocell',df.columns[1]:'Qled'})
+        df.reset_index(level=0, inplace=True)
+        df=df.rename(columns={'index':'Date'})
+
+        search_list.append(df)
+    final_table=pd.concat(search_list)
+    return final_table
